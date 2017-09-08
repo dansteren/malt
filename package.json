@@ -1,0 +1,31 @@
+{
+  "name": "malt",
+  "version": "0.0.1",
+  "description": "A Machine Learning Toolkit",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.bundle.js",
+    "transpile": "webpack -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dansteren/malt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dansteren/malt/issues"
+  },
+  "homepage": "https://github.com/dansteren/malt#readme",
+  "author": "Dan Steren <daniel.d.steren@gmail.com> (https://github.com/dansteren)",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-loader": "^2.3.6",
+    "typescript": "^2.5.2",
+    "webpack": "^3.5.6"
+  },
+  "keywords": [
+    "machine learning",
+    "typescript",
+    "byu"
+  ]
+}
