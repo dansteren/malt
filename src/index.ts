@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import * as readline from 'readline';
 
-// Consider using minimist to help with arg parsing.
-// var argv = require('minimist')(process.argv.slice(2));
+// Consider using a commandline parser to parse args
+// Either minimist: https://www.npmjs.com/package/minimist
+// or commander: https://www.npmjs.com/package/commander
 
 class Startup {
   public static main(): number {
