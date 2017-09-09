@@ -1,11 +1,12 @@
+import * as fs from 'fs';
+import * as readline from 'readline';
+
 export default class Matrix {
   // Data
   private m_data: number[][];
 
   // Meta-data
   private m_attr_name: string[];
-  // TODO: Get Map to work
-  // See https://www.reddit.com/r/typescript/comments/39taz3/map_class_in_typescript/cs69xpj/
   private m_str_to_enum: Map<string, number >[];
   private m_enum_to_str: Map<number, string >[];
 
@@ -79,113 +80,116 @@ export default class Matrix {
     }
   }
 
-  /*
-	// Loads from an ARFF file
-	public void loadArff(String filename) throws Exception, FileNotFoundException {
-    m_data = new ArrayList<double[]>();
-    m_attr_name = new ArrayList<String>();
-    m_str_to_enum = new ArrayList<TreeMap<String, Integer>>();
-    m_enum_to_str = new ArrayList<TreeMap<Integer, String>>();
-    boolean READDATA = false;
-    Scanner s = new Scanner(new File(filename));
-    while (s.hasNext()) {
-      String line = s.nextLine().trim();
-      if (line.length() > 0 && line.charAt(0) !== '%') {
-        if (!READDATA) {
 
-          Scanner t = new Scanner(line);
-          String firstToken = t.next().toUpperCase();
+  /**
+   * Loads from an ARFF file
+   */
+	// public loadArff(filename: string) {
+  //   this.m_data = [];
+  //   this.m_attr_name = [];
+  //   this.m_str_to_enum = [];
+  //   this.m_enum_to_str = [];
+  //   const READDATA = false;
+  //   // TODO: Figure out how `Scanner` works.
+  //   const scanner = readline.createInterface({
+  //     input: fs.createReadStream(filename)
+  //   });
+  //   scanner.on('line', (line) => {
+  //     if (line.length() > 0 && line.charAt(0) !== '%') {
+  //       if (!READDATA) {
+  //         // TODO: Unanalyzed passed this point.
+  //         Scanner t = new Scanner(line);
+  //         String firstToken = t.next().toUpperCase();
 
-          if (firstToken.equals("@RELATION")) {
-            String datasetName = t.nextLine();
-          }
+  //         if (firstToken.equals("@RELATION")) {
+  //           String datasetName = t.nextLine();
+  //         }
 
-          if (firstToken.equals("@ATTRIBUTE")) {
-            TreeMap < String, Integer > ste = new TreeMap<String, Integer>();
-            m_str_to_enum.add(ste);
-            TreeMap < Integer, String > ets = new TreeMap<Integer, String>();
-            m_enum_to_str.add(ets);
+  //         if (firstToken.equals("@ATTRIBUTE")) {
+  //           TreeMap < String, Integer > ste = new TreeMap<String, Integer>();
+  //           m_str_to_enum.add(ste);
+  //           TreeMap < Integer, String > ets = new TreeMap<Integer, String>();
+  //           m_enum_to_str.add(ets);
 
-            Scanner u = new Scanner(line);
-            if (line.indexOf("'") !== -1) u.useDelimiter("'");
-            u.next();
-            String attributeName = u.next();
-            if (line.indexOf("'") !== -1) attributeName = "'" + attributeName + "'";
-            m_attr_name.add(attributeName);
+  //           Scanner u = new Scanner(line);
+  //           if (line.indexOf("'") !== -1) u.useDelimiter("'");
+  //           u.next();
+  //           String attributeName = u.next();
+  //           if (line.indexOf("'") !== -1) attributeName = "'" + attributeName + "'";
+  //           m_attr_name.add(attributeName);
 
-            int vals = 0;
-            String type = u.next().trim().toUpperCase();
-            if (type.equals("REAL") || type.equals("CONTINUOUS") || type.equals("INTEGER")) {
-            }
-            else {
-              try {
-                String values = line.substring(line.indexOf("{") + 1, line.indexOf("}"));
-                Scanner v = new Scanner(values);
-                v.useDelimiter(",");
-                while (v.hasNext()) {
-                  String value = v.next().trim();
-                  if (value.length() > 0) {
-                    ste.put(value, new Integer(vals));
-                    ets.put(new Integer(vals), value);
-                    vals++;
-                  }
-                }
-              }
-              catch (Exception e) {
-                throw new Exception("Error parsing line: " + line + "\n" + e.toString());
-              }
-            }
-          }
-          if (firstToken.equals("@DATA")) {
-            READDATA = true;
-          }
-        }
-        else {
-          double[] newrow = new double[cols()];
-          int curPos = 0;
+  //           int vals = 0;
+  //           String type = u.next().trim().toUpperCase();
+  //           if (type.equals("REAL") || type.equals("CONTINUOUS") || type.equals("INTEGER")) {
+  //           }
+  //           else {
+  //             try {
+  //               String values = line.substring(line.indexOf("{") + 1, line.indexOf("}"));
+  //               Scanner v = new Scanner(values);
+  //               v.useDelimiter(",");
+  //               while (v.hasNext()) {
+  //                 String value = v.next().trim();
+  //                 if (value.length() > 0) {
+  //                   ste.put(value, new Integer(vals));
+  //                   ets.put(new Integer(vals), value);
+  //                   vals++;
+  //                 }
+  //               }
+  //             }
+  //             catch (Exception e) {
+  //               throw new Exception("Error parsing line: " + line + "\n" + e.toString());
+  //             }
+  //           }
+  //         }
+  //         if (firstToken.equals("@DATA")) {
+  //           READDATA = true;
+  //         }
+  //       }
+  //       else {
+  //         double[] newrow = new double[cols()];
+  //         int curPos = 0;
 
-          try {
-            Scanner t = new Scanner(line);
-            t.useDelimiter(",");
-            while (t.hasNext()) {
-              String textValue = t.next().trim();
-              //console.log(textValu\ne);
+  //         try {
+  //           Scanner t = new Scanner(line);
+  //           t.useDelimiter(",");
+  //           while (t.hasNext()) {
+  //             String textValue = t.next().trim();
+  //             //console.log(textValu\ne);
 
-              if (textValue.length() > 0) {
-                double doubleValue;
-                int vals = m_enum_to_str.get(curPos).size();
+  //             if (textValue.length() > 0) {
+  //               double doubleValue;
+  //               int vals = m_enum_to_str.get(curPos).size();
 
-                //Missing instances appear in the dataset as a double defined as MISSING
-                if (textValue.equals("?")) {
-                  doubleValue = MISSING;
-                }
-                // Continuous values appear in the instance vector as they are
-                else if (vals === 0) {
-                  doubleValue = Double.parseDouble(textValue);
-                }
-                // Discrete values appear as an index to the "name"
-                // of that value in the "attributeValue" structure
-                else {
-                  doubleValue = m_str_to_enum.get(curPos).get(textValue);
-                  if (doubleValue === -1) {
-                    throw new Exception("Error parsing the value '" + textValue + "' on line: " + line);
-                  }
-                }
+  //               //Missing instances appear in the dataset as a double defined as MISSING
+  //               if (textValue.equals("?")) {
+  //                 doubleValue = MISSING;
+  //               }
+  //               // Continuous values appear in the instance vector as they are
+  //               else if (vals === 0) {
+  //                 doubleValue = Double.parseDouble(textValue);
+  //               }
+  //               // Discrete values appear as an index to the "name"
+  //               // of that value in the "attributeValue" structure
+  //               else {
+  //                 doubleValue = m_str_to_enum.get(curPos).get(textValue);
+  //                 if (doubleValue === -1) {
+  //                   throw new Exception("Error parsing the value '" + textValue + "' on line: " + line);
+  //                 }
+  //               }
 
-                newrow[curPos] = doubleValue;
-                curPos++;
-              }
-            }
-          }
-          catch (Exception e) {
-            throw new Exception("Error parsing line: " + line + "\n" + e.toString());
-          }
-          m_data.add(newrow);
-        }
-      }
-    }
-  }
-  */
+  //               newrow[curPos] = doubleValue;
+  //               curPos++;
+  //             }
+  //           }
+  //         }
+  //         catch (Exception e) {
+  //           throw new Exception("Error parsing line: " + line + "\n" + e.toString());
+  //         }
+  //         m_data.add(newrow);
+  //       }
+  //     }
+  //   });
+  // }
 
   /** Returns the number of rows in the matrix */
   rows() {
@@ -235,30 +239,24 @@ export default class Matrix {
     return this.m_enum_to_str[col].size;
   }
 
-  // TODO: Fix Random stuff
-  // TODO: Figure out overloads
-  /** Shuffles the row order */
-  // shuffle(rand: Random) {
-  //   for (let n = this.rows(); n > 0; n--) {
-  //     const i = rand.nextInt(n);
-  //     const tmp = this.row(n - 1);
-  //     this.m_data[n - 1] = this.row(i);
-  //     this.m_data[i] = tmp;
-  //   }
-  // }
-
-  // /** Shuffles the row order with a buddy matrix */
-  // shuffle(rand: Random, buddy: Matrix) {
-  //   for (let n = this.rows(); n > 0; n--) {
-  //     let i: number = rand.nextInt(n);
-  //     const tmp = this.row(n - 1);
-  //     this.m_data[n - 1] = this.row(i);
-  //     this.m_data[i] = tmp;
-  //     const tmp1 = buddy.row(n - 1);
-  //     buddy.m_data[n - 1] = buddy.row(i);
-  //     buddy.m_data[i] = tmp1;
-  //   }
-  // }
+  /**
+   * Shuffles the row order with a buddy matrix.
+   * Differs from java toolkit because it doesn't accept the java `Random`
+   * construct as the first parameter.
+   */
+  shuffle(buddy?: Matrix) {
+    for (let n = this.rows(); n > 0; n--) {
+      const i = Math.floor(Math.random() * n);
+      const tmp = this.row(n - 1);
+      this.m_data[n - 1] = this.row(i);
+      this.m_data[i] = tmp;
+      if (buddy) {
+        const tmp1 = buddy.row(n - 1);
+        buddy.m_data[n - 1] = buddy.row(i);
+        buddy.m_data[i] = tmp1;
+      }
+    }
+  }
 
   /** Returns the mean of the specified column */
   columnMean(col: number) {

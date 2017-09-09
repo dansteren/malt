@@ -19,6 +19,7 @@
   "author": "Dan Steren <daniel.d.steren@gmail.com> (https://github.com/dansteren)",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^8.0.28",
     "ts-loader": "^2.3.6",
     "typescript": "^2.5.2",
     "webpack": "^3.5.6"
