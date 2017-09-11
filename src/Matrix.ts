@@ -17,23 +17,25 @@ export default class Matrix {
   // constructor() {}
 
   // Copies the specified portion of that matrix into this matrix
-  constructor(that: Matrix, rowStart: number, colStart: number, rowCount: number, colCount: number) {
+  constructor(that?: Matrix, rowStart?: number, colStart?: number, rowCount?: number, colCount?: number) {
     this.m_data = [];
-    for (let j = 0; j < rowCount; j++) {
-      const rowSrc = that.row(rowStart + j) as number[];
-      const rowDest: number[] = [];
-      for (let i = 0; i < colCount; i++) {
-        rowDest[i] = rowSrc[colStart + i];
-      }
-      this.m_data.push(rowDest);
-    }
     this.m_attr_name = [];
     this.m_str_to_enum = [];
     this.m_enum_to_str = [];
-    for (let i = 0; i < colCount; i++) {
-      this.m_attr_name.push(that.attrName(colStart + i));
-      this.m_str_to_enum.push(that.m_str_to_enum[colStart + i]);
-      this.m_enum_to_str.push(that.m_enum_to_str[colStart + i]);
+    if (that !== undefined) {
+      for (let j = 0; j < rowCount; j++) {
+        const rowSrc = that.row(rowStart + j) as number[];
+        const rowDest: number[] = [];
+        for (let i = 0; i < colCount; i++) {
+          rowDest[i] = rowSrc[colStart + i];
+        }
+        this.m_data.push(rowDest);
+      }
+      for (let i = 0; i < colCount; i++) {
+        this.m_attr_name.push(that.attrName(colStart + i));
+        this.m_str_to_enum.push(that.m_str_to_enum[colStart + i]);
+        this.m_enum_to_str.push(that.m_enum_to_str[colStart + i]);
+      }
     }
   }
 
@@ -290,8 +292,7 @@ export default class Matrix {
     }
     let maxCount = 0;
     let val = Matrix.MISSING;
-    // TODO: Make sure this iterator stuff is correct
-    tm.forEach((value: number, key: number, map: Map<number, number>) => {
+    tm.forEach((value: number, key: number) => {
       if (value > maxCount) {
         maxCount = value;
         val = key;
