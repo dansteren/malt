@@ -106,7 +106,7 @@ export default class Matrix {
             case '@ATTRIBUTE':
               let ste = new Map<string, number>();
               let ets = new Map<number, string>();
-              const lineFields = line.split(' ');
+              const lineFields = line.split(/\s+/);
               this.m_attr_name.push(lineFields[1]);
               const type = lineFields[2].trim().toUpperCase();
               if (type !== 'REAL' && type !== 'CONTINUOUS' && type !== 'INTEGER') {
