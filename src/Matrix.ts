@@ -7,17 +7,17 @@ export default class Matrix {
 
   // Meta-data
   private m_attr_name: string[];
-  private m_str_to_enum: Map<string, number >[];
-  private m_enum_to_str: Map<number, string >[];
+  private m_str_to_enum: Map<string, number>[];
+  private m_enum_to_str: Map<number, string>[];
 
-	static MISSING: number = Number.MAX_VALUE; // representation of missing values in the dataset
+  static MISSING: number = Number.MAX_VALUE; // representation of missing values in the dataset
 
   // TODO: Figure out how to overload the constructor
-	// // Creates a 0x0 matrix. You should call loadARFF or setSize next.
-	// constructor() {}
+  // // Creates a 0x0 matrix. You should call loadARFF or setSize next.
+  // constructor() {}
 
-	// Copies the specified portion of that matrix into this matrix
-	constructor(that: Matrix, rowStart: number, colStart: number, rowCount: number, colCount: number) {
+  // Copies the specified portion of that matrix into this matrix
+  constructor(that: Matrix, rowStart: number, colStart: number, rowCount: number, colCount: number) {
     this.m_data = [];
     for (let j = 0; j < rowCount; j++) {
       const rowSrc = that.row(rowStart + j) as number[];
@@ -40,7 +40,7 @@ export default class Matrix {
   /**
    * Adds a copy of the specified portion of that matrix to this matrix
    */
-	add(that: Matrix, rowStart: number, colStart: number, rowCount: number) {
+  add(that: Matrix, rowStart: number, colStart: number, rowCount: number) {
     if (colStart + this.cols() > that.cols()) {
       throw new Error('out of range');
     }
@@ -64,7 +64,7 @@ export default class Matrix {
    * @param rows
    * @param cols
    */
-	setSize(rows: number, cols: number) {
+  setSize(rows: number, cols: number) {
     this.m_data = [];
     for (let j = 0; j < rows; j++) {
       const row: number[] = [];
@@ -84,112 +84,88 @@ export default class Matrix {
   /**
    * Loads from an ARFF file
    */
-	// public loadArff(filename: string) {
-  //   this.m_data = [];
-  //   this.m_attr_name = [];
-  //   this.m_str_to_enum = [];
-  //   this.m_enum_to_str = [];
-  //   const READDATA = false;
-  //   // TODO: Figure out how `Scanner` works.
-  //   const scanner = readline.createInterface({
-  //     input: fs.createReadStream(filename)
-  //   });
-  //   scanner.on('line', (line) => {
-  //     if (line.length() > 0 && line.charAt(0) !== '%') {
-  //       if (!READDATA) {
-  //         // TODO: Unanalyzed passed this point.
-  //         Scanner t = new Scanner(line);
-  //         String firstToken = t.next().toUpperCase();
-
-  //         if (firstToken.equals("@RELATION")) {
-  //           String datasetName = t.nextLine();
-  //         }
-
-  //         if (firstToken.equals("@ATTRIBUTE")) {
-  //           TreeMap < String, Integer > ste = new TreeMap<String, Integer>();
-  //           m_str_to_enum.add(ste);
-  //           TreeMap < Integer, String > ets = new TreeMap<Integer, String>();
-  //           m_enum_to_str.add(ets);
-
-  //           Scanner u = new Scanner(line);
-  //           if (line.indexOf("'") !== -1) u.useDelimiter("'");
-  //           u.next();
-  //           String attributeName = u.next();
-  //           if (line.indexOf("'") !== -1) attributeName = "'" + attributeName + "'";
-  //           m_attr_name.add(attributeName);
-
-  //           int vals = 0;
-  //           String type = u.next().trim().toUpperCase();
-  //           if (type.equals("REAL") || type.equals("CONTINUOUS") || type.equals("INTEGER")) {
-  //           }
-  //           else {
-  //             try {
-  //               String values = line.substring(line.indexOf("{") + 1, line.indexOf("}"));
-  //               Scanner v = new Scanner(values);
-  //               v.useDelimiter(",");
-  //               while (v.hasNext()) {
-  //                 String value = v.next().trim();
-  //                 if (value.length() > 0) {
-  //                   ste.put(value, new Integer(vals));
-  //                   ets.put(new Integer(vals), value);
-  //                   vals++;
-  //                 }
-  //               }
-  //             }
-  //             catch (Exception e) {
-  //               throw new Exception("Error parsing line: " + line + "\n" + e.toString());
-  //             }
-  //           }
-  //         }
-  //         if (firstToken.equals("@DATA")) {
-  //           READDATA = true;
-  //         }
-  //       }
-  //       else {
-  //         double[] newrow = new double[cols()];
-  //         int curPos = 0;
-
-  //         try {
-  //           Scanner t = new Scanner(line);
-  //           t.useDelimiter(",");
-  //           while (t.hasNext()) {
-  //             String textValue = t.next().trim();
-  //             //console.log(textValu\ne);
-
-  //             if (textValue.length() > 0) {
-  //               double doubleValue;
-  //               int vals = m_enum_to_str.get(curPos).size();
-
-  //               //Missing instances appear in the dataset as a double defined as MISSING
-  //               if (textValue.equals("?")) {
-  //                 doubleValue = MISSING;
-  //               }
-  //               // Continuous values appear in the instance vector as they are
-  //               else if (vals === 0) {
-  //                 doubleValue = Double.parseDouble(textValue);
-  //               }
-  //               // Discrete values appear as an index to the "name"
-  //               // of that value in the "attributeValue" structure
-  //               else {
-  //                 doubleValue = m_str_to_enum.get(curPos).get(textValue);
-  //                 if (doubleValue === -1) {
-  //                   throw new Exception("Error parsing the value '" + textValue + "' on line: " + line);
-  //                 }
-  //               }
-
-  //               newrow[curPos] = doubleValue;
-  //               curPos++;
-  //             }
-  //           }
-  //         }
-  //         catch (Exception e) {
-  //           throw new Exception("Error parsing line: " + line + "\n" + e.toString());
-  //         }
-  //         m_data.add(newrow);
-  //       }
-  //     }
-  //   });
-  // }
+  public loadArff(filename: string) {
+    this.m_data = [];
+    this.m_attr_name = [];
+    this.m_str_to_enum = [];
+    this.m_enum_to_str = [];
+    let READDATA = false; // Set to true once you read a line with '@DATA'
+    const scanner = readline.createInterface({
+      input: fs.createReadStream(filename)
+    });
+    scanner.on('line', (line: string) => {
+      if (line.length > 0 && !line.startsWith('%')) {
+        if (!READDATA) {
+          const firstToken = line.split(' ')[0].toUpperCase();
+          switch (firstToken) {
+            case '@RELATION':
+              const datasetName = line.split(' ')[1].toUpperCase();
+              break;
+            case '@ATTRIBUTE':
+              let ste = new Map<string, number>();
+              let ets = new Map<number, string>();
+              const lineFields = line.split(' ');
+              this.m_attr_name.push(lineFields[1]);
+              const type = lineFields[2].trim().toUpperCase();
+              if (type !== 'REAL' && type !== 'CONTINUOUS' && type !== 'INTEGER') {
+                try {
+                  const values = line.substring(line.indexOf('{') + 1, line.indexOf('}'))
+                    .split(',')
+                    .map(v => v.trim());
+                  values.forEach((value, i) => {
+                    if (value.length > 0) {
+                      ste.set(value, i);
+                      ets.set(i, value);
+                    }
+                  });
+                }
+                catch (e) {
+                  throw new Error("Error parsing line: " + line + "\n" + e.message);
+                }
+              }
+              this.m_str_to_enum.push(ste);
+              this.m_enum_to_str.push(ets);
+              break;
+            case '@DATA':
+              READDATA = true;
+              break;
+            default:
+              throw new Error('Error processing file. Expected @RELATION, @ATTRIBUTE, or @DATA. Instead got \'' + line + '\'.');
+          }
+        } else {
+          try {
+            const attributes = line.split(',');
+            const dataRow = attributes.map((attribute, i) => {
+              attribute = attribute.trim();
+              if (attribute.length > 0) {
+                //Missing instances appear in the dataset as a double defined as MISSING
+                if (attribute === '?') {
+                  return Matrix.MISSING;
+                } else if (this.m_enum_to_str[i].size === 0) {
+                  // Continuous values appear in the instance vector as they are
+                  return parseFloat(attribute);
+                } else {
+                  // Discrete values appear as an index to the "name"
+                  // of that value in the "attributeValue" structure
+                  const result = this.m_str_to_enum[i].get(attribute);
+                  if (result === undefined) {
+                    throw new Error(`Error parsing the value '${attribute}' on line: ${line}`);
+                  }
+                  return result;
+                }
+              } else {
+                throw new Error(`Error: attribute '${i + 1}' is missing on line: ${line}`);
+              }
+            });
+            this.m_data.push(dataRow);
+          }
+          catch (e) {
+            throw new Error('Error parsing line: ' + line + '\n' + e.message);
+          }
+        }
+      }
+    });
+  }
 
   /** Returns the number of rows in the matrix */
   rows() {
@@ -305,10 +281,11 @@ export default class Matrix {
       const v = this.get(i, col);
       if (v !== Matrix.MISSING) {
         const count: number = tm.get(v);
-        if (count === null)
+        if (count === null) {
           tm.set(v, 1);
-        else
+        } else {
           tm.set(v, count + 1);
+        }
       }
     }
     let maxCount = 0;
@@ -345,8 +322,7 @@ export default class Matrix {
       const vals = this.valueCount(i);
       if (vals === 0) {
         console.log(' CONTINUOUS\n');
-      }
-      else {
+      } else {
         console.log(' {');
         for (let j = 0; j < vals; j++) {
           if (j > 0) {
@@ -366,8 +342,7 @@ export default class Matrix {
         }
         if (this.valueCount(j) === 0) {
           console.log(r[j]);
-        }
-        else {
+        } else {
           console.log(this.m_enum_to_str[j].get(r[j]));
         }
       }
