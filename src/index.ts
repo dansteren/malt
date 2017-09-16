@@ -1,62 +1,7 @@
-import * as fs from 'fs';
-import * as readline from 'readline';
 import BaselineLearner from './BaselineLearner';
 import SupervisedLearner from './SupervisedLearner';
 import Matrix from './Matrix';
-
-// Consider using a commandline parser to parse args
-// Either minimist: https://www.npmjs.com/package/minimist
-// or commander: https://www.npmjs.com/package/commander
-
-/**
- * Processes command line arguments. Exits if args are invalid.
- */
-function parseArgs() {
-  const args = process.argv.slice(2);
-  let result = {
-    learnerName: '',
-    fileName: '',
-    evalMethod: ''
-  }
-  for (let i = 0; i < args.length; i++) {
-    switch (args[i]) {
-      case '-L':
-        if (i + 1 !== args.length) {
-          result.learnerName = args[++i];
-        } else {
-          console.log('missing learning type. Exiting...')
-          process.exit();
-        }
-        break;
-      case '-A':
-        if (i + 1 !== args.length) {
-          result.fileName = args[++i];
-          if (!fs.existsSync(result.fileName)) {
-            console.log('arff file does not exist. Exiting...')
-            process.exit();
-          }
-        } else {
-          console.log('missing arff file. Exiting...')
-          process.exit();
-        }
-        break;
-      case '-E':
-        if (i + 1 !== args.length) {
-          result.evalMethod = args[++i];
-        } else {
-          console.log('Evaluation method missing. Exiting...')
-          process.exit();
-        }
-        break;
-      default:
-        console.log('Invalid option \'' + args[i] + '\'');
-        console.log('Usage:');
-        console.log('    malt -L [learningAlgorithm] -A [arffFile] -E [evalMethod] {[extraParamters]} [OPTIONS]\n');
-        process.exit();
-    }
-  }
-  return result;
-}
+import { parseArgs } from './argParser';
 
 /**
  *  When you make a new learning algorithm, you should add a line for it to this method.
@@ -66,15 +11,15 @@ function getLearner(model: string): SupervisedLearner {
     case 'baseline':
       return new BaselineLearner();
     case 'perceptron':
-      // return new Perceptron();
+    // return new Perceptron();
     case 'neuralnet':
-      // return new NeuralNet();
+    // return new NeuralNet();
     case 'decisiontree':
-      // return new DecisionTree();
+    // return new DecisionTree();
     case 'knn':
-      // return new InstanceBasedLearner();
+    // return new InstanceBasedLearner();
     default:
-      throw new Error("Unrecognized model: " + model);
+      throw new Error('Unrecognized model: ' + model);
   }
 }
 
@@ -82,11 +27,20 @@ function getLearner(model: string): SupervisedLearner {
  * The entry point for Malt
  */
 function main() {
-  const { learnerName, fileName, evalMethod } = parseArgs();
-  const normalize = false; // TODO get this from the args
+  //Parse the command line arguments
+  const {
+    learnerName,
+    fileName,
+    evalMethod,
+    normalize,
+    evalParameter,
+    verbose
+  } = parseArgs();
 
+  // Load the model
   const learner = getLearner(learnerName);
 
+  // Load the ARFF file
   const data = new Matrix();
   data.loadArff(fileName);
   if (normalize) {
@@ -96,14 +50,45 @@ function main() {
 
   // Print some stats
   console.log();
-  console.log("Dataset name: " + fileName);
-  console.log("Number of instances: " + data.rows());
-  console.log("Number of attributes: " + data.cols());
-  console.log("Learning algorithm: " + learnerName);
-  console.log("Evaluation method: " + evalMethod);
+  console.log('Dataset name: ' + fileName);
+  console.log('Number of instances: ' + data.rows());
+  console.log('Number of attributes: ' + data.cols());
+  console.log('Learning algorithm: ' + learnerName);
+  console.log('Evaluation method: ' + evalMethod);
   console.log();
 
-  console.log('ran program');
+  switch (evalMethod) {
+    case 'training':
+      console.log('Calculating accuracy on training set...');
+      // Copy all ARFF data except the last column into a new 'features' matrix.
+      const features: Matrix = new Matrix(data, 0, 0, data.rows(), data.cols() - 1);
+      // Copy the last column in the ARFF data into a labels matrix.
+      const labels = new Matrix(data, 0, data.cols() - 1, data.rows(), 1);
+      const confusion = new Matrix();
+      const startTime = Date.now();
+      learner.train(features, labels);
+      const elapsedTime = Date.now() - startTime;
+      console.log('Time to train (in seconds): ' + elapsedTime / 1000.0);
+      const accuracy: number = learner.measureAccuracy(features, labels, confusion);
+      console.log('Training set accuracy: ' + accuracy);
+      if (verbose) {
+        console.log('\nConfusion matrix: (Row=target value, Col=predicted value)');
+        confusion.print();
+        console.log('\n');
+      }
+      break;
+    case 'static':
+
+      break;
+    case 'random':
+
+      break;
+    case 'cross':
+
+      break;
+    default:
+      throw new Error('The arg parser must have a bug. Please submit a PR');
+  }
 }
 
 main();
