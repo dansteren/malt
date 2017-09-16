@@ -10,8 +10,6 @@ export default class Matrix {
   private m_str_to_enum: Map<string, number>[];
   private m_enum_to_str: Map<number, string>[];
 
-  static MISSING: number = Number.MAX_VALUE; // representation of missing values in the dataset
-
   // TODO: Figure out how to overload the constructor
   // // Creates a 0x0 matrix. You should call loadARFF or setSize next.
   // constructor() {}
@@ -138,9 +136,9 @@ export default class Matrix {
             const dataRow = attributes.map((attribute, i) => {
               attribute = attribute.trim();
               if (attribute.length > 0) {
-                //Missing instances appear in the dataset as a double defined as MISSING
+                //Missing instances appear in the dataset as undefined
                 if (attribute === '?') {
-                  return Matrix.MISSING;
+                  return undefined;
                 } else if (this.m_enum_to_str[i].size === 0) {
                   // Continuous values appear in the instance vector as they are
                   return parseFloat(attribute);
@@ -240,7 +238,7 @@ export default class Matrix {
     let count = 0;
     for (let i = 0; i < this.rows(); i++) {
       const v = this.get(i, col);
-      if (v !== Matrix.MISSING) {
+      if (v !== undefined) {
         sum += v;
         count++;
       }
@@ -250,11 +248,11 @@ export default class Matrix {
 
   /** Returns the min value in the specified column */
   columnMin(col: number): number {
-    let m = Matrix.MISSING;
+    let m = undefined;
     for (let i = 0; i < this.rows(); i++) {
       const v = this.get(i, col);
-      if (v !== Matrix.MISSING) {
-        if (m === Matrix.MISSING || v < m)
+      if (v !== undefined) {
+        if (m === undefined || v < m)
           m = v;
       }
     }
@@ -263,11 +261,11 @@ export default class Matrix {
 
   /** Returns the max value in the specified column */
   columnMax(col: number) {
-    let m = Matrix.MISSING;
+    let m = undefined;
     for (let i = 0; i < this.rows(); i++) {
       const v = this.get(i, col);
-      if (v !== Matrix.MISSING) {
-        if (m === Matrix.MISSING || v > m)
+      if (v !== undefined) {
+        if (m === undefined || v > m)
           m = v;
       }
     }
@@ -279,7 +277,7 @@ export default class Matrix {
     const tm = new Map<number, number>();
     for (let i = 0; i < this.rows(); i++) {
       const v = this.get(i, col);
-      if (v !== Matrix.MISSING) {
+      if (v !== undefined) {
         const count = tm.get(v);
         if (count === undefined) {
           tm.set(v, 1);
@@ -289,7 +287,7 @@ export default class Matrix {
       }
     }
     let maxCount = 0;
-    let val = Matrix.MISSING;
+    let val = undefined;
     tm.forEach((value: number, key: number) => {
       if (value > maxCount) {
         maxCount = value;
@@ -306,7 +304,7 @@ export default class Matrix {
         const max = this.columnMax(i);
         for (let j = 0; j < this.rows(); j++) {
           const v = this.get(j, i);
-          if (v !== Matrix.MISSING) {
+          if (v !== undefined) {
             this.set(j, i, (v - min) / (max - min));
           }
         }
