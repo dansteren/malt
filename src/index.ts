@@ -49,13 +49,13 @@ function main() {
   }
 
   // Print some stats
-  console.log();
+  console.log('');
   console.log('Dataset name: ' + fileName);
   console.log('Number of instances: ' + data.rows());
   console.log('Number of attributes: ' + data.cols());
   console.log('Learning algorithm: ' + learnerName);
   console.log('Evaluation method: ' + evalMethod);
-  console.log();
+  console.log('');
 
   switch (evalMethod) {
     case 'training':
@@ -69,7 +69,7 @@ function main() {
       learner.train(features, labels);
       const elapsedTime = Date.now() - startTime;
       console.log('Time to train (in seconds): ' + elapsedTime / 1000.0);
-      const accuracy: number = learner.measureAccuracy(features, labels, confusion);
+      const accuracy = learner.measureAccuracy(features, labels, confusion);
       console.log('Training set accuracy: ' + accuracy);
       if (verbose) {
         console.log('\nConfusion matrix: (Row=target value, Col=predicted value)');

@@ -204,7 +204,7 @@ export default class Matrix {
 
   /** Returns the name of the specified value */
   attrValue(attr: number, val: number) {
-    return this.m_enum_to_str[attr][val] as string;
+    return this.m_enum_to_str[attr].get(val) as string;
   }
 
   /**
@@ -280,8 +280,8 @@ export default class Matrix {
     for (let i = 0; i < this.rows(); i++) {
       const v = this.get(i, col);
       if (v !== Matrix.MISSING) {
-        const count: number = tm.get(v);
-        if (count === null) {
+        const count = tm.get(v);
+        if (count === undefined) {
           tm.set(v, 1);
         } else {
           tm.set(v, count + 1);

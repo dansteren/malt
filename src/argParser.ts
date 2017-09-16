@@ -9,7 +9,7 @@ import * as readline from 'readline';
  */
 function printUsage() {
   console.log('Usage:');
-  console.log('    malt -L [learningAlgorithm] -A [ARFF_File] -E [evaluationMethod] {[extraParamters]} [OPTIONS]\n');
+  console.log('    malt -L [learningAlgorithm] -A [ARFF_File] -E [evaluationMethod] {[extraParameters]} [OPTIONS]\n');
   console.log('OPTIONS:');
   console.log('    -V Print the confusion matrix and learner accuracy on individual class values');
   console.log('    -N Use normalized data');

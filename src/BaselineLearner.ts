@@ -14,7 +14,7 @@ export default class BaselineLearner extends SupervisedLearner {
   train(features: Matrix, labels: Matrix) {
     this.m_labels = [];
     for (let i = 0; i < labels.cols(); i++) {
-      if (labels.valueCount(i) == 0)
+      if (labels.valueCount(i) === 0)
         this.m_labels[i] = labels.columnMean(i); // continuous
       else
         this.m_labels[i] = labels.mostCommonValue(i); // nominal

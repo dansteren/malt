@@ -63,10 +63,10 @@ export default abstract class SupervisedLearner {
         }
       }
       let correctCount = 0;
-      const prediction = [1];
+      const prediction = [];
       for (let i = 0; i < features.rows(); i++) {
-        const feat = features.row(i) as number[];
-        const targ = labels.get(i, 0) as number;
+        const feat = features.row(i);
+        const targ = labels.get(i, 0);
         if (targ >= labelValues) {
           throw new Error("The label is out of range");
         }
