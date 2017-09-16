@@ -92,10 +92,8 @@ export default class Matrix {
     this.m_str_to_enum = [];
     this.m_enum_to_str = [];
     let READDATA = false; // Set to true once you read a line with '@DATA'
-    const scanner = readline.createInterface({
-      input: fs.createReadStream(filename)
-    });
-    scanner.on('line', (line: string) => {
+    fs.readFileSync(filename, 'utf-8').split('\n').forEach((line: string) => {
+      line = line.trim();
       if (line.length > 0 && !line.startsWith('%')) {
         if (!READDATA) {
           const firstToken = line.split(' ')[0].toUpperCase();
